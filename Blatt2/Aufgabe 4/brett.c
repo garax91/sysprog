@@ -1,6 +1,4 @@
 #include "brett.h"
-//#include <stdlib.h>
-//#include <stdio.h>
 
 int neuer_sprung(struct t_brett *b, int x, int y)
 {
