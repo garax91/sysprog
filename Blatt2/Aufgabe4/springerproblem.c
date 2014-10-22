@@ -16,7 +16,7 @@ int main()
   if (init_brett(&b,n,start_x,start_y)>0) return EXIT_FAILURE;
   setze_springer(&b);
   loesche_brett(&b);
-
+  
   return EXIT_SUCCESS;
 }
 
@@ -30,7 +30,7 @@ void setze_springer(struct t_brett *b)
   }
   else {
     int i;
-    for (i=0;i<8;i++) {
+    for (i=0;i<8;i++) {      
       if (frei(b, moves[i][0], moves[i][1])) {
         neuer_sprung(b, moves[i][0], moves[i][1]);
         setze_springer(b);

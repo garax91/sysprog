@@ -94,7 +94,7 @@ int init_brett(struct t_brett *b, int n, int x, int y)
 	b->felder = (int**) malloc (n*sizeof(int *));
 	for(i = 0; i < n; i++)
 	{
-		b->felder[i] = (int*) malloc(n*sizeof(int *));
+		b->felder[i] = (int*) malloc(n*sizeof(int));
 	}
 
 	//setze alle felder auf 0
