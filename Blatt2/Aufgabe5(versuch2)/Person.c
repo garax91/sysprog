@@ -26,7 +26,7 @@ int kleinerPerson(void *person3, void *person4, int sort)
     struct person *person1 = (struct person*) person3;
     struct person *person2 = (struct person*) person4;
 
- //sortiert nach datum
+ //sortiert nach datum SORT == 1
  if(sort==1)
  {
   //zählervariable zum durchgehen der chars;
@@ -78,7 +78,7 @@ int kleinerPerson(void *person3, void *person4, int sort)
  return 0;
  }
 
- //sortiert nach vornamen
+ //sortiert nach vornamen SORT == 2
  if(sort==2)
  {
   //zählervariable zum durchlaufen er chars
@@ -108,7 +108,7 @@ int kleinerPerson(void *person3, void *person4, int sort)
  return 0;
  }
 
- //sortiert nach nachnamen
+ //sortiert nach nachnamen SORT == 3
  if(sort==3)
  {
  //zählervariable zum durchlaufen er chars
@@ -138,7 +138,7 @@ int kleinerPerson(void *person3, void *person4, int sort)
  return 0;
  }
 
- //sortiert nach ort
+ //sortiert nach ort SORT == 4
  if(sort==4)
  {
   //zählervariable zum durchlaufen er chars

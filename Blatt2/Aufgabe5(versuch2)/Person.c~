@@ -167,6 +167,7 @@ int kleinerPerson(void *person3, void *person4, int sort)
  //gibt null zurück da name1<name2 nicht gilt
  return 0;
  }
+return 0;
 }
 
 void printPerson(void *person2)

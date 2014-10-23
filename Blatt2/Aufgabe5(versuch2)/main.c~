@@ -90,14 +90,14 @@ int main()
  /*
  sortierkriterien:
  1=geburtsdatum
- 2=vorname
- 3=nachname
+ 2=nachname
+ 3=vorname
  4=ort
  */
  int x = 1;
  char datei[100];
 
- printf("Geben sie ien Sortierkriterium an:\n1=datum\n2=vorname\n3=nachname\n4=ort\n");
+ printf("Geben sie ien Sortierkriterium an:\n1=datum\n2=nachname\n3=vorname\n4=ort\n");
  scanf("%d",&x);
 
  printf("Geben sie die Datei an aus der ausgelesen erden soll.\n");
