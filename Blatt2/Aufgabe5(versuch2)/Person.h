@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include "genString.h"
 #include "genListe.h"
-#include "Person.c"
+//#include "Person.c"
 
 void* createPerson(char *vorname, char *nachname, char *datum, char *ort);
 int kleinerPerson(void *person1, void *person2, int sort);

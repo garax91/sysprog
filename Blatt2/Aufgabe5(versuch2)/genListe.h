@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "genString.h"
-#include "genListe.c"
+//#include "genListe.c"
 #include "Person.h"
 
 void printListe(void (*func)(void*));

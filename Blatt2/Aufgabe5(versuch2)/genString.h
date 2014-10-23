@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include "Person.h"
 #include "genListe.h"
-#include "genString.c"
+//#include "genString.c"
 
 //Lese aus der Datei alle Vor- und alle Nachnamen ein
 //void einlesen();
