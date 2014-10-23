@@ -107,9 +107,9 @@ char* copyString(const char *str)
 		//schließe die datei wieder
 		fclose (datei);
 	}
-}*/
+}
 
-/*
+
 int gleichDatum(char *datum1, char *datum2)
 {
 
@@ -127,7 +127,7 @@ int gleichOrt(char *ort1, char *ort2)
 {
 
 }
-*/
+
 
 int kleinerDatum(char *datum1, char *datum2)
 {
@@ -279,4 +279,5 @@ int kleiner(int (*func2)(char *, char*),char *name1, char *name2)
  int result = (*func2)(name1,name2);
  return result;
 }
+*/
 

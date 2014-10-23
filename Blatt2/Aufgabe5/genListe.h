@@ -4,13 +4,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "genString.h"
-#include "genListe.c"
+//#include "genListe.c"
+#include "Person.h"
 
-//fügt ein element mit gegebene parametern hinzu
-void hinzufuegen(char *vorname, char *nachname, char *datum, char *ort, int sort);
-
-void loeschen();
-
-void ausgabe();
+void printListe(void (*func)(void*));
+void add(void *object, int (*func)(void*,void*,int),int sort);
+void loeschen(void(*func)(void*));
 
 #endif
