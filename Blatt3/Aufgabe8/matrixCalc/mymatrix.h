@@ -13,6 +13,7 @@ struct matrix {
 };
 
 struct matrix* add(struct matrix *matrixA, struct matrix *matrixB);
+struct matrix* mult(struct matrix *matrixA, struct matrix *matrixB);
 struct matrix* allocMatrix(int n, int m);
 void freeMatrix(struct matrix *matrixDelete);
 void generateMatrix(struct matrix *matrixGenerate, int randomArea);

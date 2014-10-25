@@ -3,18 +3,21 @@
 
 struct matrix* add(struct matrix *matrixA, struct matrix *matrixB)
 {
+	int n = matrixA->sizeN;
+	int m = matrixA->sizeM;
+	
+	struct matrix *matrixResult = allocMatrix(n, m);
+
 	if(matrixA->sizeN != matrixB->sizeN
 		|| matrixA->sizeM != matrixB->sizeM)
 	{
-		printf("Matrixen nicht kompatiebel");
-		return NULL;
+		printf("\n####################################\n");
+		printf("#                                  #\n");
+		printf("#>>  Matrixen nicht kompatiebel  <<#\n");
+		printf("#                                  #\n");
+		printf("####################################\n");
+		return matrixResult;
 	}
-
-	int n = matrixA->sizeN;
-	int m = matrixA->sizeM;
-
-	
-	struct matrix *matrixResult = allocMatrix(n, m);
 
 	int i = 0;
 	int j = 0;
@@ -25,6 +28,46 @@ struct matrix* add(struct matrix *matrixA, struct matrix *matrixB)
 		while (j < m)
 		{
 			matrixResult->felder[i][j] = matrixA->felder[i][j] + matrixB->felder[i][j];
+			j++;
+		}
+		i++;
+	}
+
+	return matrixResult;	
+}
+
+struct matrix* mult(struct matrix *matrixA, struct matrix *matrixB)
+{
+	struct matrix *matrixResult = allocMatrix(matrixA->sizeN, matrixB->sizeM);
+	
+	if(matrixA->sizeM != matrixB->sizeN)
+	{
+		printf("\n####################################\n");
+		printf("#                                  #\n");
+		printf("#>>  Matrixen nicht kompatiebel  <<#\n");
+		printf("#                                  #\n");
+		printf("####################################\n");
+		return matrixResult;
+	}
+
+
+	int i = 0;
+	int j = 0;
+	int k = 0;
+
+	while (i < matrixA->sizeN)
+	{
+		j = 0;
+		while (j < matrixB->sizeM)
+		{
+			k = 0;
+			int result = 0;
+			while (k <  matrixA->sizeM)
+			{
+				result = result + (matrixA->felder[i][k] * matrixB->felder[k][j]);
+				k++;
+			}
+			matrixResult->felder[i][j] = result;
 			j++;
 		}
 		i++;

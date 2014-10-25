@@ -81,10 +81,10 @@ printf("starting free\n");
 	freeMatrix(n, m);
 */
 
-matrixA = allocMatrix(5, 4);
-matrixB = allocMatrix(5, 4);
+matrixA = allocMatrix(7, 4);
+matrixB = allocMatrix(5, 3);
 
-generateMatrix(matrixA, 100);
+generateMatrix(matrixA, 10);
 generateMatrix(matrixB, 10);
 
 printf("Matrix A:\n");
@@ -92,13 +92,18 @@ printMatrix(matrixA);
 printf("Matrix B:\n");
 printMatrix(matrixB);
 printf("Matrix RESULT (addition) :\n");
-struct matrix *matrixResult= add(matrixA, matrixB);
-printMatrix(matrixResult);
+struct matrix *matrixResultAdd= add(matrixA, matrixB);
+printMatrix(matrixResultAdd);
+printf("Matrix RESULT (multiplikation) :\n");
+struct matrix *matrixResultMult= mult(matrixA, matrixB);
+printMatrix(matrixResultMult);
 
-writeFile(matrixResult);
+//riteFile(matrixResult);
 
 freeMatrix(matrixA);
 freeMatrix(matrixB);
+freeMatrix(matrixResultAdd);
+freeMatrix(matrixResultMult);
 
 return 0;
 }
