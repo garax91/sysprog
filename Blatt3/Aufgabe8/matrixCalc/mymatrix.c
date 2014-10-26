@@ -33,6 +33,13 @@ struct matrix* add(struct matrix *matrixA, struct matrix *matrixB)
 		i++;
 	}
 
+	printf("Addition:\n");
+	printMatrix(matrixA);
+	printf("+\n");
+	printMatrix(matrixB);
+	printf("=\n");
+	printMatrix(matrixResult);
+
 	return matrixResult;	
 }
 
@@ -72,6 +79,13 @@ struct matrix* mult(struct matrix *matrixA, struct matrix *matrixB)
 		}
 		i++;
 	}
+
+	printf("Addition:\n");
+	printMatrix(matrixA);
+	printf("x\n");
+	printMatrix(matrixB);
+	printf("=\n");
+	printMatrix(matrixResult);
 
 	return matrixResult;	
 }

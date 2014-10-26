@@ -3,7 +3,6 @@
 
 struct matrix* add(struct matrix *matrixA, struct matrix *matrixB)
 {
-printf("in add");
 	int n = matrixA->sizeN;
 	int m = matrixA->sizeM;
 	
@@ -23,8 +22,6 @@ printf("in add");
 	int i = 0;
 	int j = 0;
 
-printf("all ok");
-
 	while (i < n)
 	{
 		j = 0;
@@ -41,7 +38,6 @@ printf("all ok");
 
 struct matrix* mult(struct matrix *matrixA, struct matrix *matrixB)
 {
-printf("in mult");
 	struct matrix *matrixResult = allocMatrix(matrixA->sizeN, matrixB->sizeM);
 	
 	if(matrixA->sizeM != matrixB->sizeN)

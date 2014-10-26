@@ -4,18 +4,12 @@
 #include "mymatrix.h"
 
 
-struct matrix *matrixA;
-struct matrix *matrixB;
-struct matrix *matrixResult;
-
-
-
-int writeFile(struct matrix *matrixWrite)
+int writeFile(struct matrix *matrixWrite, char *fileName)
 {
 	FILE *datei;
 
 	//öffne das Textdokument (write only)
-	datei = fopen ("zahlen.txt", "w");
+	datei = fopen (fileName, "w");
 
 	if(datei == NULL)
 	{
@@ -40,49 +34,135 @@ int writeFile(struct matrix *matrixWrite)
 	return 0;
 }
 
+//Lese aus der Datei alle Vor- und alle Nachnamen ein
+struct matrix* einlesen(char *fileName)
+{
+	
+	FILE *datei;
+
+	char text[999+1];
+	//öffne das Textdokument (read only)
+	datei = fopen (fileName, "r");
+	
+	if (datei != NULL){
+
+		int counterN = 0;
+		int counterM = 0;
+		
+		//count what kind of matrix it is (for allocation)
+		while(fgets(text, 999, datei)){
+			
+			//+1 line (increase counter)
+			counterN++;
+	
+			int i = 0;
+
+			counterM = 0;
+			while(text[i] != '\n'){
+				if(text[i] == ' ')
+				{
+					counterM++;
+				}
+				i++;
+			}
+		}
+		
+		//schließe die datei wieder
+		fclose (datei);
+		
+		struct matrix *matrixRead = allocMatrix(counterN, counterM);
+
+		//open file again to READ
+		datei = fopen (fileName, "r");
+
+		int i = 0;
+		int j = 0;
+		while ( i < counterN )
+		{
+			j = 0;
+			while ( j < counterM )
+			{
+				fscanf(datei, "%d ", &matrixRead->felder[i][j]);
+				j++;
+			}
+			i++;
+		}
+
+		//schließe die datei wieder
+		fclose (datei);
+
+		return matrixRead;
+	}
+	printf("\n####################################\n");
+	printf("#                                  #\n");
+	printf("#>>  Datei konnte nicht gelesen werden  <<#\n");
+	printf("#                                  #\n");
+	printf("####################################\n");
+	return NULL;
+}
+
 int main(int argc, char* argv[])
 {
-/*	int i = 0;
-	while(i < argc)
-	{
-		printf("Argument %d:  %s\n", i, argv[i]);
-		i++;
-	}
-	printf("argc : %d\n", argc);
-*/
-/*
+int x;
 
-	int n = 4;
-	int m = 5;
+printf("\n\nWähle einen Modus:\n1 = neue Matrix soll generiert werden\n2 = zwei Matrixen sollen addiert werden\n3 = zwei Matrixen sollen multipliziert werden\n");
+scanf("%d",&x);
 
-	if(argc >= 3)
+if(x == 1)
+{
+	int n, m;
+	char fileName[100];
+	printf("\n\n Wie groß soll die generierte Matrix sein?\n Gebe eine Zeilenanzal (n) ein:\n");
+	scanf("%d",&n);
+	printf("\nGebe eine Spaltenanzal (m) ein:\n");
+	scanf("%d",&m);
+	printf("\nGebe ein Dateiname ein, in die die Matrix gespeichert werden soll:\n");
+	scanf("%s",fileName);
+
+	struct matrix *newMatrix = allocMatrix(n, m);
+	generateMatrix(newMatrix, 100);
+	printf("\n\n Generierte Matrix:\n");
+	printMatrix(newMatrix);
+	writeFile(newMatrix, fileName);
+	freeMatrix(newMatrix);
+}
+else if(x == 2 || x == 3)
+{
+	char fileName1[100];
+	char fileName2[100];
+	char fileName3[100];
+	printf("\n\nGebe ein Dateiname ein, für die erste Matrix der Berechnung:\n");
+	scanf("%s",fileName1);
+	printf("\n\nGebe ein Dateiname ein, für die zweite Matrix der Berechnung:\n");
+	scanf("%s",fileName2);
+	printf("\n\nGebe ein Dateiname ein, in der die Ergebnismatrix gespeichert werden soll:\n");
+	scanf("%s",fileName3);
+
+	struct matrix *matrixA = einlesen(fileName1);
+	struct matrix *matrixB = einlesen(fileName2);
+	struct matrix *matrixResult;
+
+	if(x == 2)
 	{
-		n = atoi(argv[1]);
-		m = atoi(argv[2]);
+		matrixResult = add(matrixA, matrixB);
 	}
 	else
 	{
-		printf("no arguments.... default : n  = %d, m = %d\n", n, m);
-	}
-
-
-printf("n : %d\n", n);
-printf("m : %d\n", m);
-
-printf("starting alloc\n");
-	allocMatrix(n, m);
-printf("starting generate\n");
-	generateMatrix(n, m, 100);
-printf("starting print\n");
-	printMatrix(n, m);
-printf("starting fileWriting\n");
-	writeFile(n, m);
-printf("starting free\n");
-	freeMatrix(n, m);
-*/
-
-matrixA = allocMatrix(7, 4);
-matrixB = allocMatrix(5, 3);
+		matrixResult = mult(matrixA, matrixB);
+	}	
+	
+	writeFile(matrixResult, fileName3);
+	freeMatrix(matrixA);
+	freeMatrix(matrixB);
+	freeMatrix(matrixResult);
+}
+else
+{
+	printf("falscher Modus");
+}
+/*
+matrixA = allocMatrix(4, 4);
+matrixB = allocMatrix(4, 4);
 
 generateMatrix(matrixA, 10);
 generateMatrix(matrixB, 10);
@@ -92,18 +172,20 @@ printMatrix(matrixA);
 printf("Matrix B:\n");
 printMatrix(matrixB);
 printf("Matrix RESULT (addition) :\n");
-//struct matrix *matrixResultAdd= add(matrixA, matrixB);
-//printMatrix(matrixResultAdd);
+struct matrix *matrixResultAdd= add(matrixA, matrixB);
+printMatrix(matrixResultAdd);
 printf("Matrix RESULT (multiplikation) :\n");
 struct matrix *matrixResultMult= mult(matrixA, matrixB);
 printMatrix(matrixResultMult);
 
-//riteFile(matrixResult);
+writeFile(matrixResultAdd, "zahlen.txt");
+struct matrix *matrixRead = einlesen("zahlen.txt");
 
 freeMatrix(matrixA);
 freeMatrix(matrixB);
-//freeMatrix(matrixResultAdd);
+freeMatrix(matrixResultAdd);
 freeMatrix(matrixResultMult);
-
+freeMatrix(matrixRead);
+*/
 return 0;
 }
