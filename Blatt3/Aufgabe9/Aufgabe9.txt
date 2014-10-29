@@ -1,0 +1,9 @@
+Aufgabe b)
+
+(1)
+
+Profiling has several steps:
+
+You must compile and link your program with profiling enabled. (insert option -pg)
+You must execute your program to generate a profile data file. (./run the programm)
+You must run gprof to analyze the profile data. 

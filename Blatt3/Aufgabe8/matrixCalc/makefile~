@@ -1,5 +1,5 @@
 OBJECTS = main.o mymatrix.o 
-CPPFLAGS = -Wall -g -pg
+CPPFLAGS = -Wall -g
 CC = gcc
 
 run: $(OBJECTS)

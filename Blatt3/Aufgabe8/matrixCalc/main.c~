@@ -103,89 +103,63 @@ struct matrix* einlesen(char *fileName)
 
 int main(int argc, char* argv[])
 {
-int x;
+	int x;
 
-printf("\n\nWähle einen Modus:\n1 = neue Matrix soll generiert werden\n2 = zwei Matrixen sollen addiert werden\n3 = zwei Matrixen sollen multipliziert werden\n");
-scanf("%d",&x);
+	printf("\n\nWähle einen Modus:\n1 = neue Matrix soll generiert werden\n2 = zwei Matrixen sollen addiert werden\n3 = zwei Matrixen sollen multipliziert werden\n");
+	scanf("%d",&x);
 
-if(x == 1)
-{
-	int n, m;
-	char fileName[100];
-	printf("\n\n Wie groß soll die generierte Matrix sein?\n Gebe eine Zeilenanzal (n) ein:\n");
-	scanf("%d",&n);
-	printf("\nGebe eine Spaltenanzal (m) ein:\n");
-	scanf("%d",&m);
-	printf("\nGebe ein Dateiname ein, in die die Matrix gespeichert werden soll:\n");
-	scanf("%s",fileName);
-
-	struct matrix *newMatrix = allocMatrix(n, m);
-	generateMatrix(newMatrix, 100);
-	printf("\n\n Generierte Matrix:\n");
-	printMatrix(newMatrix);
-	writeFile(newMatrix, fileName);
-	freeMatrix(newMatrix);
-}
-else if(x == 2 || x == 3)
-{
-	char fileName1[100];
-	char fileName2[100];
-	char fileName3[100];
-	printf("\n\nGebe ein Dateiname ein, für die erste Matrix der Berechnung:\n");
-	scanf("%s",fileName1);
-	printf("\n\nGebe ein Dateiname ein, für die zweite Matrix der Berechnung:\n");
-	scanf("%s",fileName2);
-	printf("\n\nGebe ein Dateiname ein, in der die Ergebnismatrix gespeichert werden soll:\n");
-	scanf("%s",fileName3);
-
-	struct matrix *matrixA = einlesen(fileName1);
-	struct matrix *matrixB = einlesen(fileName2);
-	struct matrix *matrixResult;
-
-	if(x == 2)
+	if(x == 1)
 	{
-		matrixResult = add(matrixA, matrixB);
+		int n, m;
+		char fileName[100];
+		printf("\n\n Wie groß soll die generierte Matrix sein?\n Gebe eine Zeilenanzal (n) ein:\n");
+		scanf("%d",&n);
+		printf("\nGebe eine Spaltenanzal (m) ein:\n");
+		scanf("%d",&m);
+		printf("\nGebe ein Dateiname ein, in die die Matrix gespeichert werden soll:\n");
+		scanf("%s",fileName);
+
+		struct matrix *newMatrix = allocMatrix(n, m);
+		generateMatrix(newMatrix, 100);
+		printf("\n\n Generierte Matrix:\n");
+		printMatrix(newMatrix);
+		writeFile(newMatrix, fileName);
+		freeMatrix(newMatrix);
+	}
+	else if(x == 2 || x == 3)
+	{
+		char fileName1[100];
+		char fileName2[100];
+		char fileName3[100];
+		printf("\n\nGebe ein Dateiname ein, für die erste Matrix der Berechnung:\n");
+		scanf("%s",fileName1);
+		printf("\n\nGebe ein Dateiname ein, für die zweite Matrix der Berechnung:\n");
+		scanf("%s",fileName2);
+		printf("\n\nGebe ein Dateiname ein, in der die Ergebnismatrix gespeichert werden soll:\n");
+		scanf("%s",fileName3);
+
+		struct matrix *matrixA = einlesen(fileName1);
+		struct matrix *matrixB = einlesen(fileName2);
+		struct matrix *matrixResult;
+
+		if(x == 2)
+		{
+			matrixResult = add(matrixA, matrixB);
+		}
+		else
+		{
+			matrixResult = mult(matrixA, matrixB);
+		}	
+	
+		writeFile(matrixResult, fileName3);
+		freeMatrix(matrixA);
+		freeMatrix(matrixB);
+		freeMatrix(matrixResult);
 	}
 	else
 	{
-		matrixResult = mult(matrixA, matrixB);
-	}	
-	
-	writeFile(matrixResult, fileName3);
-	freeMatrix(matrixA);
-	freeMatrix(matrixB);
-	freeMatrix(matrixResult);
-}
-else
-{
-	printf("falscher Modus");
-}
-/*
-matrixA = allocMatrix(4, 4);
-matrixB = allocMatrix(4, 4);
+		printf("falscher Modus");
+	}
 
-generateMatrix(matrixA, 10);
-generateMatrix(matrixB, 10);
-
-printf("Matrix A:\n");
-printMatrix(matrixA);
-printf("Matrix B:\n");
-printMatrix(matrixB);
-printf("Matrix RESULT (addition) :\n");
-struct matrix *matrixResultAdd= add(matrixA, matrixB);
-printMatrix(matrixResultAdd);
-printf("Matrix RESULT (multiplikation) :\n");
-struct matrix *matrixResultMult= mult(matrixA, matrixB);
-printMatrix(matrixResultMult);
-
-writeFile(matrixResultAdd, "zahlen.txt");
-struct matrix *matrixRead = einlesen("zahlen.txt");
-
-freeMatrix(matrixA);
-freeMatrix(matrixB);
-freeMatrix(matrixResultAdd);
-freeMatrix(matrixResultMult);
-freeMatrix(matrixRead);
-*/
 return 0;
 }

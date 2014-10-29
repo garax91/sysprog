@@ -158,7 +158,7 @@ int main(int argc, char* argv[])
 	}
 	else
 	{
-		printf("falscher Modus");
+		printf("falscher Modus\n");
 	}
 
 return 0;
