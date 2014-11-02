@@ -8,8 +8,9 @@ int palindrom_check1(const char *st1)
   int st1_len = strlen(st1), i;
 
   for(i = 0; i < st1_len / 2; i++)
+  {
     if (toupper(st1[i]) != toupper(st1[st1_len -i-1])) return 0;
-
+  }
   return 1;
 }
 
