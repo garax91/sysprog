@@ -50,13 +50,16 @@ int main()
 
 	socklen_t flen = sizeof(from);	
 
-	len = recvfrom(fd, msg, sizeof(msg), 0, (struct sockaddr *) &from, &flen);
-	if(len<0)
+	while(1)
 	{
-		printf("empfangen fehlgeschlagen\n");
-		return EXIT_FAILURE;
+		len = recvfrom(fd, msg, sizeof(msg), 0, (struct sockaddr *) &from, &flen);
+		if(len<0)
+		{
+			printf("empfangen fehlgeschlagen\n");
+			return EXIT_FAILURE;
+		}
+		printf(">>Received %d bytes from host %s port %d:\n>>Nachricht:  %s\n", len, inet_ntoa(from.sin_addr), ntohs(from.sin_port), msg);
 	}
-	printf(">>Received %d bytes from host %s port %d:\n>>Nachricht:  %s\n", len, inet_ntoa(from.sin_addr), ntohs(from.sin_port), msg);
 
 
 	//free
