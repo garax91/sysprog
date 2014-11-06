@@ -1,26 +1,14 @@
 #include <sys/types.h>
 #include <sys/socket.h>
-//#include <netinet/in.h>
-//#include <unistd.h>
 #include <arpa/inet.h>
-//#include <netdb.h>
-//#include <unistd.h>
-//#include <signal.h>
 #include <stdio.h>
-//#include <string.h>
-//#include <fcntl.h>
-//#include <errno.h>
-//#include <sys/time.h>
 #include <stdlib.h>
-//#include <memory.h>
-//#include <ifaddrs.h>
-//#include <net/if.h>
-//#include <stdarg.h>
 
 int main()
 {
 	int fd, err, len;
 	struct sockaddr_in addr, from;
+	socklen_t flen1, flen2;
 	char msg[64];
 	
 	fd = socket(AF_INET, SOCK_DGRAM, 0);
@@ -31,7 +19,7 @@ int main()
 	}
 	
 	addr.sin_family = AF_INET;
-	addr.sin_port = htons(4711);
+	addr.sin_port = htons(0);
 	addr.sin_addr.s_addr = htonl(INADDR_ANY);
 
 	err = bind(fd, (struct sockaddr *) &addr, sizeof(struct sockaddr_in));
@@ -40,29 +28,31 @@ int main()
 		printf("Fehler beim bind\n");
 		return EXIT_FAILURE;
 	}
-/*	err = getsocketname(fd, (struct sockaddr *) &addr, sizeof(struct sockaddr_in));
+	flen1 = sizeof(addr);
+	err = getsockname(fd, (struct sockaddr *) &addr, &flen1);
 	if(err < 0)
 	{
 		printf("Fehler bei getsocketname(..)\n");
 		return EXIT_FAILURE;
 	}
-*/
+	printf("Server erfolgreich initialisiert! Bitte nutze folgene Daten, um mit dem Server zu kommunizieren:\n");
+	printf("==============================\n");
+	printf("Port : %d\n", ntohs(addr.sin_port));
+	printf("==============================\n\n\n");
 
-	socklen_t flen = sizeof(from);	
+
+	flen2 = sizeof(from);	
 
 	while(1)
 	{
-		len = recvfrom(fd, msg, sizeof(msg), 0, (struct sockaddr *) &from, &flen);
+		len = recvfrom(fd, msg, sizeof(msg), 0, (struct sockaddr *) &from, &flen2);
 		if(len<0)
 		{
 			printf("empfangen fehlgeschlagen\n");
 			return EXIT_FAILURE;
 		}
-		printf(">>Received %d bytes from host %s port %d:\n>>Nachricht:  %s\n", len, inet_ntoa(from.sin_addr), ntohs(from.sin_port), msg);
+		printf(">>Nachricht von %s durch den Port %d erhalten!\n>>Nachricht: %s\n", inet_ntoa(from.sin_addr), ntohs(from.sin_port), msg);
+		printf("____________________________________________________________\n");
 	}
-
-
-	//free
-//	free(addr);
 	return EXIT_SUCCESS;
 }

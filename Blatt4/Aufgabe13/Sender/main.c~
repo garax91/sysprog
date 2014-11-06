@@ -19,16 +19,14 @@ int main()
 		return EXIT_FAILURE;
 	}
 
-	printf(">>Gebe den Port an: \n>>");
-	scanf("%d", &port);
 	printf(">>Gebe den Host an: \n>>");
 	scanf("%s", ipAdress);
+	printf(">>Gebe den Port an: \n>>");
+	scanf("%d", &port);
 
 	addrDest.sin_family = AF_INET;
 	addrDest.sin_port = htons(port);
 	addrDest.sin_addr.s_addr = inet_addr(ipAdress);
-
-printf("Host: %d\n", addrDest.sin_addr.s_addr);
 
 	while(1)
 	{
@@ -45,7 +43,7 @@ printf("Host: %d\n", addrDest.sin_addr.s_addr);
 
 
 		printf("nachricht gesendet!\n");
-		printf("Portnummer: %d\n", ntohs(addrDest.sin_port));
+		printf("____________________________________________________________\n");
 	}
 
 	return EXIT_SUCCESS;

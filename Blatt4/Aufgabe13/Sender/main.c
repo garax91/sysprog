@@ -30,8 +30,8 @@ int main()
 
 	while(1)
 	{
+		printf("____________________________________________________________\n");
 		printf(">>Nachricht: \n>>");
-	//	scanf("%s", msg);
 		scanf("%*c%63[^\n]", msg);
 	
 		err = sendto(fd, msg, strlen(msg)+1, 0, (struct sockaddr*) &addrDest, sizeof(struct sockaddr_in));
@@ -43,7 +43,6 @@ int main()
 
 
 		printf("nachricht gesendet!\n");
-		printf("Portnummer: %d\n", ntohs(addrDest.sin_port));
 	}
 
 	return EXIT_SUCCESS;
