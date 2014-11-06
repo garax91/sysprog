@@ -28,11 +28,20 @@ int main()
 	addrDest.sin_port = htons(port);
 	addrDest.sin_addr.s_addr = inet_addr(ipAdress);
 
+
+	printf("============================================\n");
+	printf("Schreibe 'exit' um das Programm zu beenden!!\n");
+	printf("============================================\n\n");
+
 	while(1)
 	{
 		printf("____________________________________________________________\n");
 		printf(">>Nachricht: \n>>");
 		scanf("%*c%63[^\n]", msg);
+		if(strcmp(msg, "exit") == 0)
+		{
+			break;
+		}
 	
 		err = sendto(fd, msg, strlen(msg)+1, 0, (struct sockaddr*) &addrDest, sizeof(struct sockaddr_in));
 		if(err < 0)
