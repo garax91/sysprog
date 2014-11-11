@@ -17,7 +17,7 @@ size_t alloc_test(char *c){
 int main(void){
   char* c;
   long size;
-  size = alloc_test(c);
+  size = alloc_test(&c);
   printf("Zur Verf�gung stehender Speicher in Megabyte: %lu\n", size);
   if (size>0) {
     printf("Reservierter Speicher mit Addresse %s wird nun freigegeben...\n", c);
