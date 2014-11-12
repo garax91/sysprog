@@ -82,7 +82,7 @@ int main(int argc, char const *argv[])
     int found = 0;
 
 	char readbuffer[BUFFER_SIZE];
-	char completebuffer[1000000];
+	char completebuffer[1000000]; 
 	strcpy(completebuffer, "");
 	//whileschleife geht die website durch solange die zeile nicht 0 lang ist
 	while(readline(sock, readbuffer, sizeof(readbuffer))>0) {
@@ -97,6 +97,7 @@ int main(int argc, char const *argv[])
         }
         //gibt die übungszettel auf der seite aus
         else {
+        	//übernimmt readbuffer in completbuffer
             strcat(completebuffer,readbuffer);
             if(content) {
                 //printf("%s\n\n\n\n\n",readbuffer);
