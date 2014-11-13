@@ -20,13 +20,16 @@ int main(int argc, char **argv)
     return EXIT_FAILURE;
   }
 
-  anzverbindungen = (int)argv[1];
-  portnummer = (int)argv[2];
+  anzverbindungen = atoi(argv[1]);
+  portnummer = atoi(argv[2]);
 
   if (!prepare_socket(portnummer)) {
     printf("Fehler beim Erzeugen / binden des Sockets\n");
     return 1;
   }
+
+  printf("hört jetzt zu.\n");
+
   anzverbindungen = manage_connections(anzverbindungen, &manager);
   printf("%d Verbindungen wurden behandelt.\n", anzverbindungen);
   close_socket();

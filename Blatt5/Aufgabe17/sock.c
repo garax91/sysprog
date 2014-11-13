@@ -1,4 +1,4 @@
-
+#include "sock.h"
 
 int serversocket = 0;
 
@@ -19,10 +19,13 @@ int prepare_socket(int portnum)
   addr.sin_port = htons(portnum);
   addr.sin_addr.s_addr =htonl(INADDR_ANY);
 
-  error = bind(fd,(struct sockaddr *) &addr, sizeof(sockaddr_in));
+  error = bind(serversocket,(struct sockaddr *) &addr, sizeof(struct sockaddr_in));
 
   if(error < 0)
   {
+    printf("binden des Sockets fehlgeschlagen\n");
+    close(serversocket);
+    serversocket = 0;
   	return 0;
   }
 
@@ -30,7 +33,9 @@ int prepare_socket(int portnum)
 
   if(error < 0)
   {
-  	printf("sacre blööööö!\n");
+  	printf("fehler beim listen des Sockets\n");
+    close(serversocket);
+    serversocket = 0;
   	return 0;
   }
 
@@ -40,33 +45,42 @@ int prepare_socket(int portnum)
 
 void close_socket(void)
 {
-  close(serversocket);
+  if(close(serversocket)<0)
+  {
+    printf("schließen des Sockets fehlgeschlagen\n");
+  }
+  serversocket = 0;
   return;
 }
 
 int manage_connections(int anzverbindungen, int (*managerfunction) (FILE * datastream, char *information))
 {
   int new_sock,i;
-  struct sockaddr* addr;
+  struct sockaddr_in addr;
 
-  socklen_t* addrlen = sizeof(addr);
+  socklen_t addrlen = sizeof(struct sockaddr_in);
 
 
 for(i=0;i<anzverbindungen;i++)
 {
-  new_sock = accept(serversocket, addr, addrlen);
+  new_sock = accept(serversocket, (struct sockaddr*) &addr, &addrlen);
 
   if(new_sock < 0)
   {
-  	printf("sacre bläääää!\n");
-  	return -1;
+  	printf("Verbindungsaufbau fehlgeschlagen\n");
+  	//return -1;
   }
-  esle
+  else
   {
-  	printf("");
-  	File *stream;
+  	printf("Verbindung aufgebaut\n");
+  	FILE *stream;
   	stream = fdopen(new_sock, "r+");
-  	managerfunction(stream, int_nota(addr.in_addr);
+  	managerfunction(stream, inet_ntoa(addr.sin_addr));
+    if(stream != NULL && fclose(stream) == 0)
+    {
+      close(new_sock);
+      printf("Verbindung wurde beendet\n");
+    }
   }
 }
 
