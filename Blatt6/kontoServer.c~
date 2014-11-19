@@ -1,0 +1,99 @@
+#include <stdio.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netdb.h>
+#include <arpa/inet.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+int main(int argc, char *argv[])
+{
+	int konto = 0;
+
+	int mainSocket = socket(AF_INET,SOCK_STREAM,0);	
+	int err;
+	int port;
+	struct sockaddr_in addrSock;
+
+
+	if(mainSocket < 0)
+	{
+		printf("ERROR bei socket(..)"); 
+		return EXIT_FAILURE;
+	}
+
+	const char* portInserted = argv[1];
+	port = atoi(portInserted);
+	if(port == 0)
+	{
+		printf("ERROR, keine gültige portnummer eingegeben!");
+		return EXIT_FAILURE;
+	}
+
+	addrSock.sin_family = AF_INET;
+	addrSock.sin_port = htons(port);
+	addrSock.sin_addr = htonl(INADDR_ANY);
+
+	err = bind(mainSocket, (struct sockaddr *) &addrSock, sizeof(struct sockaddr_in));
+	if(err < 0)
+	{
+		printf("ERROR bei bind(..)");
+	}
+
+	err = listen(mainSocket, 5);
+	if(err < 0)
+	{
+		printf("ERROR bei listen(..)");
+	}
+
+	while(1)
+	{
+		struct sockaddr_in addrClient;
+		socklen_t addrlen;
+
+		addrlen =  sizeof(struct sockaddr_in);
+		int currentSocket = accept(mainSocket, (struct sockaddr*) &addrClient, &addrlen);
+		if(currentSocket < 0)
+		{
+			printf("ERROR in accept(..)");
+		}
+
+		while(1)
+		{
+			err = write(currentSocket, konto, sizeof(int));
+			if(err < 0)
+			{
+				printf("ERROR in write(..)");
+			}
+
+			int kontoChange;
+			err = read(currentSocket, kontoChange, sizeof(int));
+			if(err < 0)
+			{
+				printf("ERROR in read(..)");
+			}
+			if(err == 0)
+			{
+				printf("Client bricht Verbindung ab");
+				break;
+			}
+
+			konto += kontoChange;
+		}
+		
+		err = close(currentSocket);
+		if(err < 0)
+		{
+			printf("ERROR, currentSocket kann nicht geschlossen werden");
+		}
+	}
+
+	err = close(mainSocket);
+	if(err < 0)
+	{
+		printf("ERROR, mainSocket kann nicht geschlossen werden");
+	}
+
+
+}
