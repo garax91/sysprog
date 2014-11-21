@@ -57,8 +57,15 @@ int main(int argc, char *argv[])
 		ssize_t errSizeRead = read(mainSocket, readBuffer, readSize);
 		if(errSizeRead < 0)
 		{
-			printf("ERROR, in write(..)");
+			printf("ERROR, in read(..)");
 		}
+		if(errSizeRead == 0)
+		{
+			printf("Server hat Verbindung getrennt . . \n");
+			break;
+		}
+	
+
 		printf("\n############################################\n");
 		printf("## Der aktuelle Kontostand ist: %9s ##\n", readBuffer);
 		printf("############################################\n\n");
@@ -72,7 +79,7 @@ int main(int argc, char *argv[])
 		if(opt == 0)
 		{
 			sprintf(strSend, "error");
-			size_t endSize = 0;
+			size_t endSize = sizeof(strSend);
 			ssize_t errSizeWriteEnd = write(mainSocket, strSend, endSize);
 			if(errSizeWriteEnd < 0)
 			{

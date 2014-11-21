@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
 		ssize_t errSizeRead = read(mainSocket, readBuffer, readSize);
 		if(errSizeRead < 0)
 		{
-			printf("ERROR, in write(..)");
+			printf("ERROR, in read(..)");
 		}
 		if(errSizeRead == 0)
 		{
@@ -78,8 +78,8 @@ int main(int argc, char *argv[])
 		
 		if(opt == 0)
 		{
-			sprintf(strSend, "error");
-			size_t endSize = 0;
+			sprintf(strSend, "error_dc");
+			size_t endSize = sizeof(strSend);
 			ssize_t errSizeWriteEnd = write(mainSocket, strSend, endSize);
 			if(errSizeWriteEnd < 0)
 			{

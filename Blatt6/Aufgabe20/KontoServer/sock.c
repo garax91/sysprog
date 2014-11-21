@@ -61,6 +61,8 @@ int manage_connections()
   socklen_t addrlen = sizeof(struct sockaddr_in);
 
  int kontoStand = 0;
+char writeBuffer[9999];
+char readBuffer[9999];
 
 while(1)
 {
@@ -78,9 +80,6 @@ while(1)
 		/***/
 		while(1)
 		{
-			char writeBuffer[9999];
-			char readBuffer[9999];
-
 			sprintf(writeBuffer, "%d", kontoStand);
 
 			size_t sendSize = sizeof(writeBuffer);
@@ -96,19 +95,23 @@ while(1)
 			ssize_t errSizeRead = read(new_sock, readBuffer, readSize);
 			if(errSizeRead < 0)
 			{
-				printf("ERROR, in write(..)");
+				printf("ERROR, in read(..)");
 			}
-			if(errSizeRead == 0)
+
+//			printf("gelesen: %s\n", readBuffer);
+			if(strcmp(readBuffer, "error_dc") == 0)
 			{
+				printf("Client bricht verbindung ab\n");
 				break;
 			}
-			printf("gelesen: %s\n", readBuffer);
 
 			int kontoChange = atoi(readBuffer);
 
 			
-			printf("%d\n", kontoChange);
+			printf("konto änderung : %d\n", kontoChange);
 			kontoStand += kontoChange;
+
+			printf("neuer Kontostand : %d\n", kontoStand);
 		}
 		/***/
 
