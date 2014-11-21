@@ -1,4 +1,4 @@
-OBJECTS = kontoServer.o
+OBJECTS = tcpserver.o sock.o
 CPPFLAGS = -Wall -g
 CC = gcc
 

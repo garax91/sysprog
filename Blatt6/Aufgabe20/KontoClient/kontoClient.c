@@ -35,37 +35,59 @@ int main(int argc, char *argv[])
 	err = connect(mainSocket, (struct sockaddr *) &addrSock, sizeof(struct sockaddr_in));
 	if(err < 0)
 	{
-		printf("ERROR, bei connect(..)");
+		printf("ERROR, bei connect(..)\n");
+		return EXIT_FAILURE;
 	}
 
-	printf("SUCCESSful connected");
+	printf("SUCCESSful connected\n");
 
 	int opt = -1;
 	int betrag = 0;
 	char strSend[19];
 	char strOption;
-	int* kontoStand;
+//	int* kontoStand;
 	while(1)
 	{
 		/**
 			LESE den kontostand
 		*/
-		
-		size_t readSize = sizeof(kontoStand);
-		ssize_t errSizeRead = read(mainSocket, kontoStand, readSize);
+		char readBuffer[9999];		
+
+		size_t readSize = sizeof(readBuffer);
+		ssize_t errSizeRead = read(mainSocket, readBuffer, readSize);
 		if(errSizeRead < 0)
 		{
 			printf("ERROR, in write(..)");
 		}
-		printf("Der Kontostand beträgt: %d\n", *kontoStand);
+		if(errSizeRead == 0)
+		{
+			printf("Server hat Verbindung getrennt . . \n");
+			break;
+		}
+	
+
+		printf("\n############################################\n");
+		printf("## Der aktuelle Kontostand ist: %9s ##\n", readBuffer);
+		printf("############################################\n\n");
 
 		/** 
 			nutzerEINGABE und SENDEN
 		*/
-		printf("Wähle aus folgenden Optionen aus:\n1 = Kontogutschrift\n2 = Kontoausgabe\n");
+		printf("Wähle aus folgenden Optionen aus:\n0 = Disconnect\n1 = Kontogutschrift\n2 = Kontoausgabe\n");
 		scanf("%d", &opt);
-
-		if(opt == 1)
+		
+		if(opt == 0)
+		{
+			sprintf(strSend, "error");
+			size_t endSize = 0;
+			ssize_t errSizeWriteEnd = write(mainSocket, strSend, endSize);
+			if(errSizeWriteEnd < 0)
+			{
+				printf("ERROR, in write(..)");
+			}
+			break;
+		}
+		else if(opt == 1)
 		{
 			strOption = '+';
 		}
@@ -100,5 +122,6 @@ int main(int argc, char *argv[])
 		printf("ERROR, mainSocket kann nicht geschlossen werden");
 	}
 
+	return EXIT_SUCCESS;
 
 }
