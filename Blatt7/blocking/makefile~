@@ -1,4 +1,4 @@
-OBJECTS = tcpserver.o sock.o
+OBJECTS = BlockingUDPChat.o 
 CPPFLAGS = -Wall -g
 CC = gcc
 

@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "unp_readline.h"
 
 int initSock()
 {
@@ -48,7 +49,8 @@ int main()
 	struct sockaddr_in from, addrDest;
 	socklen_t flen2 = sizeof(from);	
 	char msg[64], ipAdress[16];
-	int fd, port, len, err, startModus;
+	int fd, port, len, err, res;
+	fd_set rset;
 	
 	fd = initSock();
 	if(fd < 0)
@@ -65,28 +67,35 @@ int main()
 	addrDest.sin_port = htons(port);
 	addrDest.sin_addr.s_addr = inet_addr(ipAdress);
 
+	//set in non-blocking modus
+/*	int flags, err;
+	flags = fcntl(fd, F_GETFL, 0);
+	err = fcntl(fd, F_SETFL, flags | O_NONBLOCK);
+*/
 
-	printf(">>Womit soll der Server starten?:>>\n>>0 = Senden>>\n>>1 = Empfangen>>\n");
-	scanf("%d", &startModus);
-
-	if(startModus)
-	{
-		len = recvfrom(fd, msg, sizeof(msg), 0, (struct sockaddr *) &from, &flen2);
-		if(len<0)
-		{
-			printf("empfangen fehlgeschlagen\n");
-			return EXIT_FAILURE;
-		}
-		printf(">>Nachricht von %s durch den Port %d erhalten!\n>>Nachricht: %s\n", inet_ntoa(from.sin_addr), ntohs(from.sin_port), msg);
-		printf("____________________________________________________________\n");
-
-	}
 
 	while(1)
 	{
-
+		FD_ZERO(&rset);
+		FD_SET(fd, &rset);
+		FD_SET(STDIN_FILENO, &rset);
 		
 		printf(">>Schreibe Nachricht: \n>>");
+		
+		res = select(2, &rset, NULL, NULL, NULL);
+		if(res < 0)
+		{
+			printf("ERROR bei seelct(..)");
+		}
+		if(FD_ISSET(fd, &rset))
+		{
+			printf("in fd from socket");
+		}
+		if(FD_ISSET(STDIN_FILENO, &rset))
+		{
+			printf("in stdin");
+		}
+/*
 		scanf("%*c%63[^\n]", msg);
 		if(strcmp(msg, "exit") == 0)
 		{
@@ -111,7 +120,7 @@ int main()
 		}
 		printf(">>Nachricht von %s durch den Port %d erhalten!\n>>Nachricht: %s\n", inet_ntoa(from.sin_addr), ntohs(from.sin_port), msg);
 		printf("____________________________________________________________\n");
-	}
+	*/}
 
 	return EXIT_SUCCESS;
 }
