@@ -48,7 +48,7 @@ int main()
 	struct sockaddr_in from, addrDest;
 	socklen_t flen2 = sizeof(from);	
 	char msg[64], ipAdress[16];
-	int fd, port, len, err;
+	int fd, port, len, err, startModus;
 	
 	fd = initSock();
 	if(fd < 0)
@@ -65,7 +65,13 @@ int main()
 	addrDest.sin_port = htons(port);
 	addrDest.sin_addr.s_addr = inet_addr(ipAdress);
 
-	if(0)
+
+	printf(">>Womit soll der Server starten?:>>\n>>0 = Senden>>\n>>1 = Empfangen>>\n");
+	scanf("%d", &startModus);
+
+	printf("____________________________________________________________\n");
+
+	if(startModus)
 	{
 		len = recvfrom(fd, msg, sizeof(msg), 0, (struct sockaddr *) &from, &flen2);
 		if(len<0)
@@ -81,8 +87,8 @@ int main()
 	while(1)
 	{
 
-		printf("____________________________________________________________\n");
-		printf(">>Nachricht: \n>>");
+		
+		printf(">>Schreibe Nachricht: \n>>");
 		scanf("%*c%63[^\n]", msg);
 		if(strcmp(msg, "exit") == 0)
 		{
@@ -95,9 +101,7 @@ int main()
 			printf("senden fehlgeschlagen\n");
 			return EXIT_FAILURE;
 		}
-
-
-		printf("nachricht gesendet!\n");
+		printf("____________________________________________________________\n");
 
 
 /////////////////////////////////////77
