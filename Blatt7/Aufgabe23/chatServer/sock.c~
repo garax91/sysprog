@@ -1,0 +1,235 @@
+#include "sock.h"
+
+int serversocket = 0;
+int clients[9];
+
+int prepare_socket(int port)
+{
+  int error;
+
+  struct sockaddr_in addr;
+
+  serversocket = socket(AF_INET,SOCK_STREAM,0);
+
+  if(serversocket < 0)
+  {
+  	return 0;
+  }
+
+  addr.sin_family = AF_INET;
+  addr.sin_port = htons(port);
+  addr.sin_addr.s_addr =htonl(INADDR_ANY);
+
+  error = bind(serversocket,(struct sockaddr *) &addr, sizeof(struct sockaddr_in));
+
+  if(error < 0)
+  {
+    printf("binden des Sockets fehlgeschlagen\n");
+    close(serversocket);
+    serversocket = 0;
+  	return 0;
+  }
+
+  error = listen(serversocket, 1);
+
+  if(error < 0)
+  {
+  	printf("fehler beim listen des Sockets\n");
+    close(serversocket);
+    serversocket = 0;
+  	return 0;
+  }
+
+  //alles hat funktioniert
+  return 1;
+}
+
+void close_socket(void)
+{
+  if(close(serversocket)<0)
+  {
+    printf("schließen des Sockets fehlgeschlagen\n");
+  }
+  serversocket = 0;
+  return;
+}
+
+int manage_connections()
+{
+printf("in manage_connections()\n");
+  struct sockaddr_in addr;
+
+  socklen_t addrlen = sizeof(struct sockaddr_in);
+
+//char writeBuffer[9999];
+char readBuffer[9999];
+fd_set rset;
+int new_sock, err;
+
+int i = 0;
+while(i < 9)
+{
+	clients[i] = -1;
+	i++;
+}
+
+while(1)
+{
+		FD_ZERO(&rset);
+		FD_SET(serversocket, &rset);
+		int highest_fd = serversocket;
+
+		i = 0;
+		while(i < 9)
+		{
+			if(clients[i] != -1)
+			{
+				FD_SET(clients[i], &rset);
+				if(clients[i] > highest_fd)
+				{
+					highest_fd = clients[i];
+				}
+			}
+			i++;
+		}		
+		
+		//printf(">>Schreibe Nachricht: \n>>");
+
+		err = select(highest_fd + 1, &rset, NULL, NULL, NULL);
+		printf("hi\n");
+		if(err < 0)
+		{
+			printf("ERROR bei seelct(..)\n");
+		}
+		if(FD_ISSET(serversocket, &rset))
+		{
+			new_sock = accept(serversocket, (struct sockaddr*) &addr, &addrlen);
+				  if(new_sock < 0)
+			  {
+			  	printf("Verbindungsaufbau fehlgeschlagen\n");
+			  	return -1;
+			  }
+			  else
+			  {
+			  	printf("Verbindung aufgebaut\n");
+				i = 0;				
+				while(i<9)
+					{
+					if(clients[i]==-1)
+						{
+						clients[i] = new_sock;
+						break;
+						}
+					i++;
+					}
+			  }
+		}
+		
+		i = 0;
+		while(i<9)
+		{		
+			if(FD_ISSET(clients[i], &rset))
+			{
+				size_t readSize = sizeof(readBuffer);
+				ssize_t errSizeRead = read(clients[i], readBuffer, readSize);
+				if(errSizeRead < 0)
+				{
+					printf("ERROR, in read(..)\n");
+				}
+				else if(errSizeRead == 0)
+				{
+					close(clients[i]);
+					clients[i] = -1;
+				}
+				else{
+
+					printf("gelesen: %s\n", readBuffer);
+				
+					size_t sendSize = sizeof(readBuffer);
+
+					int j = 0;
+					while(j<9)
+					{
+					if(clients[j] != -1)
+						{
+							ssize_t errSizeWrite = write(clients[j], readBuffer, sendSize);
+							if(errSizeWrite < 0)
+							{
+								printf("senden fehlgeschlagen\n");
+								return EXIT_FAILURE;
+							}
+						}
+					j++;
+					}
+				}
+					
+				/*if(strcmp(readBuffer, "exit") == 0)
+				{
+					printf("Client bricht verbindung ab\n");
+					break;
+				}*/
+			}
+		i++;
+		}
+
+
+
+
+
+//////////////////////////
+/*	  new_sock = accept(serversocket, (struct sockaddr*) &addr, &addrlen);
+
+	  if(new_sock < 0)
+	  {
+	  	printf("Verbindungsaufbau fehlgeschlagen\n");
+	  	return -1;
+	  }
+	  else
+	  {
+	  	printf("Verbindung aufgebaut\n");
+	
+		
+		while(1)
+		{
+			sprintf(writeBuffer, "%d", kontoStand);
+
+			size_t sendSize = sizeof(writeBuffer);
+			ssize_t errSizeWrite = write(new_sock, writeBuffer, sendSize);
+			if(errSizeWrite < 0)
+			{
+				printf("ERROR, in write(..)");
+			}
+
+			//
+
+			size_t readSize = sizeof(readBuffer);
+			ssize_t errSizeRead = read(new_sock, readBuffer, readSize);
+			if(errSizeRead < 0)
+			{
+				printf("ERROR, in read(..)");
+			}
+
+//			printf("gelesen: %s\n", readBuffer);
+			if(strcmp(readBuffer, "error_dc") == 0)
+			{
+				printf("Client bricht verbindung ab\n");
+				break;
+			}
+
+			int kontoChange = atoi(readBuffer);
+
+			
+			printf("konto änderung : %d\n", kontoChange);
+			kontoStand += kontoChange;
+
+			printf("neuer Kontostand : %d\n", kontoStand);
+		}
+		
+
+	     	close(new_sock);
+	     	printf("Verbindung wurde beendet\n");
+	  }*/
+}
+
+return 1;
+}
