@@ -1,0 +1,12 @@
+a)
+eax = 0
+
+b)
+eax = eax + eax*4 --> eax *= 5
+
+c)
+
+keine ahnung
+
+d)
+keine ahnung
